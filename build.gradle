@@ -1,0 +1,26 @@
+plugins {
+  id 'java'
+  id 'scala'
+}
+
+group 'com.nonpool'
+version '1.0-SNAPSHOT'
+
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+
+  // if run spark locally, use implementation for this dependency
+  implementation ('org.apache.spark:spark-sql_2.12:3.1.1')
+  implementation 'org.scala-lang:scala-library:2.12.14'
+
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+  useJUnitPlatform()
+}
