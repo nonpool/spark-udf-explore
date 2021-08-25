@@ -3,6 +3,7 @@ package com.nonpool.java;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.api.java.UDF1;
 import org.apache.spark.sql.api.java.UDF2;
 import org.apache.spark.sql.types.DataTypes;
 
@@ -25,8 +26,8 @@ public class JavaUDF {
 
         dataset.toDF().createOrReplaceTempView("test");
 
-        returnNormalPOJOInUDF(spark);
-
+//        returnNormalPOJOInUDF(spark);
+        returnEnumInUDF(spark);
         spark.stop();
     }
 
@@ -147,6 +148,30 @@ public class JavaUDF {
         spark.sql("select toNormalClass(name, 18) from test").show();
         // other: https://forums.databricks.com/questions/13361/how-do-i-create-a-udf-in-java-which-return-a-compl.html
         // https://issues.apache.org/jira/browse/SPARK-29009
+    }
+
+    /**
+     * got exception:
+     *
+     * Exception in thread "main" java.lang.AssertionError: assertion failed
+     * 	at scala.Predef$.assert(Predef.scala:208)
+     * 	at org.apache.spark.sql.catalyst.encoders.ExpressionEncoder$.javaBean(ExpressionEncoder.scala:67)
+     * 	at org.apache.spark.sql.Encoders$.bean(Encoders.scala:154)
+     * 	at org.apache.spark.sql.Encoders.bean(Encoders.scala)
+     * 	at com.nonpool.java.JavaUDF.returnEnumInUDF(JavaUDF.java:160)
+     * 	at com.nonpool.java.JavaUDF.main(JavaUDF.java:30)
+     */
+    private static void returnEnumInUDF(SparkSession spark) {
+
+        spark.udf().register("enum", new UDF1<String, JavaEnum>() {
+            @Override
+            public JavaEnum call(String s) throws Exception {
+                return JavaEnum.valueOf(s);
+            }
+        }, Encoders.bean(JavaEnum.class).schema());
+
+
+        spark.sql("select enum('A')").show();
     }
 
 }
