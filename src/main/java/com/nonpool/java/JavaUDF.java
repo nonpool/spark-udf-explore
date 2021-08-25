@@ -4,8 +4,10 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.api.java.UDF2;
+import org.apache.spark.sql.types.DataTypes;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class JavaUDF {
     public static void main(String[] args) {
@@ -144,6 +146,7 @@ public class JavaUDF {
 
         spark.sql("select toNormalClass(name, 18) from test").show();
         // other: https://forums.databricks.com/questions/13361/how-do-i-create-a-udf-in-java-which-return-a-compl.html
+        // https://issues.apache.org/jira/browse/SPARK-29009
     }
 
 }
