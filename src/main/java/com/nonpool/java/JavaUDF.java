@@ -26,8 +26,8 @@ public class JavaUDF {
 
         dataset.toDF().createOrReplaceTempView("test");
 
-//        returnNormalPOJOInUDF(spark);
-        returnEnumInUDF(spark);
+        returnNormalPOJOInUDF(spark);
+//        returnEnumInUDF(spark);
         spark.stop();
     }
 
@@ -145,7 +145,7 @@ public class JavaUDF {
         }, Encoders.bean(NormalPOJO.class).schema());
 
 
-        spark.sql("select toNormalClass(name, 18) from test").show();
+        spark.sql("select toNormalClass(value, 18) from test").show();
         // other: https://forums.databricks.com/questions/13361/how-do-i-create-a-udf-in-java-which-return-a-compl.html
         // https://issues.apache.org/jira/browse/SPARK-29009
     }
